@@ -1,21 +1,20 @@
 package controllers;
 
+import objects.Grid;
 import event.EventBus;
 import event.IEvent;
 import event.IEventListener;
 import event.events.StartClickedEvent;
-import javafx.fxml.Initializable;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class SudokuController<T extends IEvent> implements IEventListener<T> {
     @Override
     public void handle(T event) {
-        Test();
+        if (event.getClass() == StartClickedEvent.class)
+            test((StartClickedEvent) event);
     }
-    private void Test(){
-        System.out.println("its work");
+    private void test(StartClickedEvent event){
+        Grid grid = new Grid(event.DIR);
+        grid.checkGrid();
     }
 
     public void initialize() {
