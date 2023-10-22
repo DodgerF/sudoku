@@ -1,11 +1,12 @@
 package controllers;
 
 import event.EventBus;
+import event.IEvent;
+import event.IEventListener;
+import event.events.GridGeneratedEvent;
 import event.events.StartClickedEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -15,52 +16,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ViewController implements Initializable
+public class ViewController<T extends IEvent> implements IEventListener<T>, Initializable
 {
     @FXML
-    private Button _startButton;
-    @FXML
-    private ComboBox<String> _difficultyComboBox;
-    @FXML
-    private TextField _dimTextField;
+    private ComboBox<String> _dimensionComboBox;
     @FXML
     private Pane _pane;
-    private Integer _dim;
-    private final String _errorText = "The field size must be a number no less than 3 and no more than 9!";
 
     public void onStartClicked() {
-        if (checkFields()){
-            EventBus.getInstance().invoke(new StartClickedEvent(_dim, _difficultyComboBox.getValue()));
+        String dim = "";
+        for (int i = 0; i < _dimensionComboBox.getValue().length(); i++) {
+            if (_dimensionComboBox.getValue().charAt(i) == 'x') break;
+
+            dim += _dimensionComboBox.getValue().charAt(i);
+        }
+        EventBus.getInstance().invoke(new StartClickedEvent((int)Math.sqrt(Integer.parseInt(dim))));
+    }
+
+    @Override
+    public void handle(T event) {
+        if (event.getClass() == GridGeneratedEvent.class) {
+            OnGenerated( (GridGeneratedEvent) event);
         }
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        List<String> difficulty = new ArrayList<>();
-        difficulty.add("Easy"); difficulty.add("Normal"); difficulty.add("Hard");
-        _difficultyComboBox.getItems().addAll(difficulty);
-
-        _dimTextField.setText("3");
-        _difficultyComboBox.setValue("Easy");
+        List<String> dimension = new ArrayList<>();
+        dimension.add("9x9"); dimension.add("16x16"); dimension.add("25x25");
+        _dimensionComboBox.getItems().addAll(dimension);
+        _dimensionComboBox.setValue("9x9");
     }
 
-    private boolean checkFields() {
-        try {
-            _dim = Integer.parseInt(_dimTextField.getText());
-            if (_dim < 3 || _dim > 9) {
-                showError(_errorText);
-                return false;
-            }
-            return true;
-        }
-        catch (Exception e){
-            showError(e.getMessage());
-            return false;
-        }
-    }
-    private void showError(String errorText) {
-        Alert error = new Alert(Alert.AlertType.ERROR);
-        error.setContentText(errorText);
-        error.setHeaderText("");
-        error.show();
+    private void OnGenerated(GridGeneratedEvent event) {
+        GridView _grid = new GridView(event.GRID);
+
+        _pane.getChildren().clear();
+        _grid.drawOnParent(_pane);
     }
 }

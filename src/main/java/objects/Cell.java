@@ -1,25 +1,63 @@
 package objects;
 
-import javafx.scene.control.Label;
+import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+
 
 public class Cell {
-    private Integer _value;
     private TextField _field;
-    private Label _textValue;
-    private double cordX;  private double cordY;
-    private static double width; private static double height;
-
-    public Cell(Integer value) {
-        _textValue = new Label();
+    private Integer _value;
+    private int _cordX;  private int _cordY;
+    private double _width; private double _height;
+    public Cell() {
         _field = new TextField();
 
-        _value = value;
-        _textValue.setText(_value.toString());
+        _field.setAlignment(Pos.CENTER);
+    }
+    public void setDisable(boolean bool) {
+        if (bool) {
+            _field.setText(_value.toString());
+        }
+        _field.setDisable(bool);
     }
 
-    public void setVisible(boolean isVisible){
-        _field.setVisible(!isVisible);
-        _textValue.setVisible(isVisible);
+    public void setValue(Integer value) {
+        if (value < 1) return;
+        _value = value;
+    }
+    public Integer getValue() {
+        return _value;
+    }
+
+    public void setCords(int x, int y) {
+        _cordX = x;
+        _cordY = y;
+    }
+
+    public void createCellOnScreen(Pane parent, Integer dim) {
+        if (parent == null) return;
+
+        int squareOfDim = dim * dim;
+
+        _field.setOnAction(actionEvent -> {
+           if (Integer.parseInt(_field.getText()) == (_value)){
+               _field.setDisable(true);
+           }
+           else {
+               _field.setText(null);
+           }
+        });
+
+        _width = parent.getWidth() / squareOfDim;
+        _height = parent.getHeight() / squareOfDim;
+
+        _field.setPrefWidth(_width);
+        _field.setPrefHeight(_height);
+
+        _field.setLayoutX(_cordX * _width);
+        _field.setLayoutY(_cordY * _height);
+
+        parent.getChildren().add(_field);
     }
 }
