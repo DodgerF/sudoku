@@ -20,14 +20,6 @@ public class Grid {
     public Integer getDim() {
         return _dim;
     }
-    public void checkGrid(){
-        for (int i = 0; i < _dim * _dim; i++) {
-            for (int j = 0; j < _dim * _dim; j++) {
-                System.out.print(massive[i][j].getValue());
-            }
-            System.out.println("\n");
-        }
-    }
 
     private void generateBaseGrid(int dim){
         for (int i = 0; i < dim * dim; i++) {
@@ -45,11 +37,7 @@ public class Grid {
         }
     }
     private void mix(){
-        String[] mixFunc = {"transposing",
-                            "swapRowsSmall",
-                            "swapColumnsSmall",
-                            "swapRowsArea",
-                            "swapColumnsArea"};
+        String[] mixFunc = {TRANSP_FUNC, SWAP_R_SMALL_FUNC, SWAP_C_SMALL_FUNC, SWAP_R_AREA_FUNC, SWAP_C_AREA_FUNC};
 
         for(int i = 0; i < ITERATIONS_AMOUNT; i++) {
             int idFunc = new Random().nextInt(mixFunc.length);
@@ -62,6 +50,8 @@ public class Grid {
             }
         }
     }
+
+    private final String TRANSP_FUNC = "transposing";
     private void transposing(){
         Cell[][] newGrid = new Cell[_dim * _dim][_dim * _dim];
         for (int j = 0; j < _dim * _dim; j++){
@@ -72,6 +62,8 @@ public class Grid {
         }
         massive = newGrid;
     }
+
+    private final String SWAP_R_SMALL_FUNC = "swapRowsSmall";
     private void swapRowsSmall() {
         int area = (int) (Math.random() * _dim);
         int line1 = (int) (Math.random() *  _dim);
@@ -89,12 +81,15 @@ public class Grid {
         massive[N2] = temp;
     }
 
+
+    private final String SWAP_C_SMALL_FUNC = "swapColumnsSmall";
     private void swapColumnsSmall() {
         transposing();
         swapRowsSmall();
         transposing();
     }
 
+    private final String SWAP_R_AREA_FUNC = "swapRowsArea";
     private void swapRowsArea() {
         int area1 = (int) (Math.random() * _dim);
         int area2 = (int) (Math.random() * _dim);
@@ -110,7 +105,7 @@ public class Grid {
             massive[N2] = temp;
         }
     }
-
+    private final String SWAP_C_AREA_FUNC = "swapColumnsArea";
     private void swapColumnsArea() {
         transposing();
         swapRowsArea();

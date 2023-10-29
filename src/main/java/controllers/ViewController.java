@@ -8,7 +8,6 @@ import event.events.StartClickedEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
 import java.net.URL;
@@ -48,7 +47,7 @@ public class ViewController<T extends IEvent> implements IEventListener<T>, Init
     }
 
     private void OnGenerated(GridGeneratedEvent event) {
-        GridView _grid = new GridView(event.GRID);
+        GridDrawer _grid = new GridDrawer(event.GRID);
 
         _pane.getChildren().clear();
         _grid.drawOnParent(_pane);

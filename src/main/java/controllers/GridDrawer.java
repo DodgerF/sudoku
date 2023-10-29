@@ -5,9 +5,9 @@ import javafx.scene.shape.Line;
 import objects.Cell;
 import objects.Grid;
 
-public class GridView {
+public class GridDrawer {
     private Grid _grid;
-    public GridView(Grid grid) {
+    public GridDrawer(Grid grid) {
         _grid = grid;
     }
 

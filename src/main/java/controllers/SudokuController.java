@@ -19,7 +19,6 @@ public class SudokuController<T extends IEvent> implements IEventListener<T> {
     }
     private void onStarted(StartClickedEvent event){
         _grid = new Grid(event.DIM);
-        _grid.checkGrid();
         disableCell(event.DIM);
 
         EventBus.getInstance().invoke(new GridGeneratedEvent(_grid));
