@@ -14,7 +14,6 @@ public class Sudoku<T extends IEvent> implements IEventListener<T> {
     private Grid _grid;
     @Override
     public void handle(T event) {
-        if (event.getClass() == StartClickedEvent.class)
             onStarted((StartClickedEvent) event);
     }
     private void onStarted(StartClickedEvent event){

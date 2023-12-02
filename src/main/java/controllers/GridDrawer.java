@@ -1,37 +1,43 @@
 package controllers;
 
+import event.IEvent;
+import event.IEventListener;
+import event.events.GridGeneratedEvent;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import objects.Cell;
 import objects.Grid;
 
-import java.lang.reflect.Field;
 
-public class GridDrawer {
-    private Grid _grid;
-    public GridDrawer(Grid grid) {
-        _grid = grid;
+public class GridDrawer<T extends IEvent> implements IEventListener<T> {
+    private final Pane _parent;
+    public GridDrawer(Pane pane) {
+        _parent = pane;
     }
 
-    public void drawOnParent(Pane parent) {
-        for (Cell[] cells : _grid.massive) {
+    @Override
+    public void handle(T event) {
+        _parent.getChildren().clear();
+        drawOnParent(((GridGeneratedEvent)event).GRID);
+    }
+    public void drawOnParent(Grid grid) {
+        for (Cell[] cells : grid.massive) {
             for (Cell cell: cells){
-                createCellOnScreen(cell, parent);
+                createCellOnScreen(cell, grid.getDim());
             }
         }
-        for (int i = 1; i < _grid.getDim(); i++){
-            parent.getChildren().add(new Line(parent.getWidth() / _grid.getDim() * i, 0,
-                    parent.getWidth() / _grid.getDim() * i,  parent.getHeight()));
-            parent.getChildren().add(new Line(0, parent.getHeight() / _grid.getDim() * i,
-                    parent.getWidth(),  parent.getHeight() / _grid.getDim() * i));
+        for (int i = 1; i < grid.getDim(); i++){
+            _parent.getChildren().add(new Line(_parent.getWidth() / grid.getDim() * i, 0,
+                    _parent.getWidth() / grid.getDim() * i,  _parent.getHeight()));
+            _parent.getChildren().add(new Line(0, _parent.getHeight() / grid.getDim() * i,
+                    _parent.getWidth(),  _parent.getHeight() / grid.getDim() * i));
         }
     }
 
-    private void createCellOnScreen(Cell cell, Pane parent){
-        if (parent == null) return;
+    private void createCellOnScreen(Cell cell, int dim){
 
-        int squareOfDim = _grid.getDim() * _grid.getDim();
+        int squareOfDim = dim * dim;
         TextField field = cell.getField();
 
         field.setOnAction(actionEvent -> {
@@ -43,8 +49,8 @@ public class GridDrawer {
             }
         });
 
-        double width = parent.getWidth() / squareOfDim;
-        double height = parent.getHeight() / squareOfDim;
+        double width = _parent.getWidth() / squareOfDim;
+        double height = _parent.getHeight() / squareOfDim;
 
         field.setPrefWidth(width);
         field.setPrefHeight(height);
@@ -52,6 +58,6 @@ public class GridDrawer {
         field.setLayoutX(cell.getCordX() * width);
         field.setLayoutY(cell.getCordY() * height);
 
-        parent.getChildren().add(field);
+        _parent.getChildren().add(field);
     }
 }
