@@ -9,11 +9,13 @@ public class Cell {
     private TextField _field;
     private Integer _value;
     private int _cordX;  private int _cordY;
-    private double _width; private double _height;
     public Cell() {
         _field = new TextField();
 
         _field.setAlignment(Pos.CENTER);
+    }
+    public TextField getField() {
+        return _field;
     }
     public void setDisable(boolean bool) {
         if (bool) {
@@ -35,29 +37,12 @@ public class Cell {
         _cordY = y;
     }
 
-    public void createCellOnScreen(Pane parent, Integer dim) {
-        if (parent == null) return;
-
-        int squareOfDim = dim * dim;
-
-        _field.setOnAction(actionEvent -> {
-           if (Integer.parseInt(_field.getText()) == (_value)){
-               _field.setDisable(true);
-           }
-           else {
-               _field.setText(null);
-           }
-        });
-
-        _width = parent.getWidth() / squareOfDim;
-        _height = parent.getHeight() / squareOfDim;
-
-        _field.setPrefWidth(_width);
-        _field.setPrefHeight(_height);
-
-        _field.setLayoutX(_cordX * _width);
-        _field.setLayoutY(_cordY * _height);
-
-        parent.getChildren().add(_field);
+    public int getCordX() {
+        return _cordX;
     }
+
+    public int getCordY() {
+        return _cordY;
+    }
+
 }
