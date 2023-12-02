@@ -1,4 +1,4 @@
-package controllers;
+package sample.sudoku;
 
 import event.events.GridGeneratedEvent;
 import objects.Grid;
@@ -9,7 +9,7 @@ import event.events.StartClickedEvent;
 
 import java.util.Random;
 
-public class SudokuController<T extends IEvent> implements IEventListener<T> {
+public class Sudoku<T extends IEvent> implements IEventListener<T> {
 
     private Grid _grid;
     @Override

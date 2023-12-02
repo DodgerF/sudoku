@@ -1,7 +1,5 @@
 package sample.sudoku;
 
-import controllers.SudokuController;
-import controllers.ViewController;
 import event.EventBus;
 import event.events.GridGeneratedEvent;
 import event.events.StartClickedEvent;
@@ -16,7 +14,7 @@ public class SudokuApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        SudokuController<StartClickedEvent> sudokuController = new SudokuController<>();
+        Sudoku<StartClickedEvent> sudokuController = new Sudoku<>();
         EventBus.getInstance().subscribe(StartClickedEvent.class, sudokuController);
 
         FXMLLoader fxmlLoader = new FXMLLoader(SudokuApplication.class.getResource("hello-view.fxml"));
